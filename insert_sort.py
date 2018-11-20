@@ -4,7 +4,9 @@ Created on Thu Nov  1 11:25:01 2018
 
 @author: Su.Jun
 """
+import random
 lists=[5,3,10,5,4,8,7,1]
+count=len(lists)
 
 '''
 #insert_sort 插入排序 腾出一个空杯子
@@ -49,38 +51,30 @@ while group > 0:
            j += group
     group //= step
 print( list(lists))
-
-
+'''
+'''
     # 快速排序
 #!/usr/bin/python3
-L=[5,3,10,5,4,8,7,1]
-def quick_sort(L, left, right):
-    if left <= right:
-        key = L[left]
-        i = left
-        j = right
-        print(i,j)
-        while i < j:
-            print(list(L))
-            while i < j and key <= L[j]:
-                j -= 1
-            L[i] = L[j]
-            print(L[i],L[j])
-            while i < j and L[i] <= key:
-                i += 1
-            L[j] = L[i]
-        
-        L[i] = key
-        quick_sort(L, left, i - 1)
-        print(list(L))
-        quick_sort(L, i + 1, right)
-        print(list(L))
-
-if __name__ == '__main__':
-    left=0
-    right=len(L)-1
-    quick_sort(L,left,right)
-    
+#def quick_sort(lists, left, right):
+    # 快速排序
+left=0
+right=len(lists)
+if left >= right: #左边点等于右边点时，排序结束
+   print(lists)
+key = lists[left] #初始基准数
+low = left
+high = right
+while left < right:
+    while left < right and lists[right] >= key:
+            right -= 1
+    lists[left] = lists[right]
+    while left < right and lists[left] <= key:
+            left += 1
+    lists[right] = lists[left]
+lists[right] = key
+#quick_sort(lists, low, left - 1)
+#quick_sort(lists, left + 1, high)
+print( list(lists))
     
 '''
 
@@ -131,13 +125,8 @@ def quick_sort(alist, start, end):
     # 对基准元素右边的子序列进行快速排序
     quick_sort(alist, low+1, end)
 
-if __name__ == '__main__':
-    alist = [54,26,93,17,77,31,44,55,20]
-    quick_sort(alist,0,len(alist)-1)
-    print(alist)
-
-
-
+c=quick_sort(lists,0,count)
+'''
 递归
 
 def quicksort(data):
@@ -169,5 +158,91 @@ def partition(data, left, right):
 
     data[left] = tmp
     return left
-
+ 
     
+   
+def random_list(n):
+    生成随机数据
+    :param n: 
+    :return: 
+    ret = []
+    a1 = ['赵', '钱', '孙', '李', '邹', '吴', '郑', '王', '周']
+    a2 = ['力', '好', '礼', '丽', '文', '建', '梅', '美', '高', '']
+    a3 = ['强', '文', '斌', '阔', '文', '莹', '超', '云', '龙', '']
+    ids = range(1001, 1001 + n)
+    for i in range(n):
+        name = random.choice(a1) + random.choice(a2) + random.choice(a3)
+        age = random.randint(18, 60)
+        dic = {'id': ids[i], 'name': name, 'age': age}
+        ret.append(dic)
+    return ret
+
+
+def sift(data, low, high):
+    i = low      # 父节点
+    j = 2 * i + 1   # 左子节点
+    tmp = data[i]   # 父节点值
+    while j <= high:    # 子节点在节点中
+        if j < high and data[j]['id'] < data[j + 1]['id']:  # 有右子节点且右节点比父节点值大
+            j += 1
+        if tmp['id'] < data[j]['id']:
+            data[i] = data[j]   # 将父节点替换成新的子节点的值
+            i = j   # 变成新的父节点
+            j = 2 * i + 1   # 新的子节点
+        else:
+            break
+    data[i] = tmp   # 将替换的父节点值赋给最终的父节点
+
+
+def heap_sort(data):
+    n = len(data)
+    # 创建堆
+    for i in range(n//2-1, -1, -1):
+        sift(data, i, n-1)
+
+    # 挨个出数
+    for i in range(n-1, -1, -1):    # 从大到小
+        data[0], data[i] = data[i], data[0]     # 将最后一个值与父节点交互位置
+        sift(data, 0, i-1)
+
+li = random_list(1000) # 生成数据
+random.shuffle(li) # 将数据打乱
+heap_sort(li)
+print(li)
+
+
+def MAX_Heapify(heap,HeapSize,root):#在堆中做结构调整使得父节点的值大于子节点
+
+    left = 2*root + 1
+    right = left + 1
+    larger = root
+    if left < HeapSize and heap[larger] < heap[left]:
+        larger = left
+    if right < HeapSize and heap[larger] < heap[right]:
+        larger = right
+    if larger != root:#如果做了堆调整则larger的值等于左节点或者右节点的，这个时候做对调值操作
+        heap[larger],heap[root] = heap[root],heap[larger]
+        MAX_Heapify(heap, HeapSize, larger)
+
+def Build_MAX_Heap(heap):#构造一个堆，将堆中所有数据重新排序
+    HeapSize = len(heap)#将堆的长度当独拿出来方便
+    for i in range((HeapSize -2)//2,-1,-1):#从后往前出数
+        MAX_Heapify(heap,HeapSize,i)
+
+def HeapSort(heap):#将根节点取出与最后一位做对调，对前面len-1个节点继续进行对调整过程。
+    Build_MAX_Heap(heap)
+    for i in range(len(heap)-1,-1,-1):
+        heap[0],heap[i] = heap[i],heap[0]
+        MAX_Heapify(heap, i, 0)
+    return heap
+
+if __name__ == '__main__':
+    a = [30,50,57,77,62,78,94,80,84]
+    print (a)
+    HeapSort(a)
+    print (a)
+    b = [random.randint(1,1000) for i in range(1000)]
+    print (b)
+    HeapSort(b)
+    print (b)
+'''
