@@ -74,9 +74,9 @@ for i in range(len(dfdata)):
         exhib_id_list = dfdata.iat[i,exhib_id_index].split('/')
         # 连接database
         conn = pymysql.Connect(
-                host='rdsiyj2ynqumiej.mysql.rds.aliyuncs.com',
-                port = 3306,
-                user='readonly',password= 'RDrd1-9!',
+                host='',
+                port = ,
+                user='',password= '',
                 database='mbox_web',charset='utf8')
          # 得到一个可以执行SQL语句并且将结果作为字典返回的游标
         cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
